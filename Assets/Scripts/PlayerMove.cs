@@ -15,6 +15,29 @@ public class PlayerMove : MonoBehaviour
 
     private float xRotation = 0f;
 
+    private InputSystem_Actions input;   // ★ 추가
+
+    void Awake()
+    {
+        input = new InputSystem_Actions();   // ★ 추가
+    }
+
+    void OnEnable()
+    {
+        input.Enable();                      // ★ 추가
+
+        input.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
+        input.Player.Move.canceled += ctx => moveInput = Vector2.zero;
+
+        input.Player.Look.performed += ctx => lookInput = ctx.ReadValue<Vector2>();
+        input.Player.Look.canceled += ctx => lookInput = Vector2.zero;
+    }
+
+    void OnDisable()
+    {
+        input.Disable();                     // ★ 추가
+    }
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -29,8 +52,6 @@ public class PlayerMove : MonoBehaviour
         Look();
     }
 
-    public void OnMove(InputValue value) => moveInput = value.Get<Vector2>();
-    public void OnLook(InputValue value) => lookInput = value.Get<Vector2>();
 
     void Move()
     {
@@ -67,4 +88,12 @@ public class PlayerMove : MonoBehaviour
 
         cam.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
     }
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.collider.CompareTag("Enemy"))
+        {
+            GetComponent<PlayerHealth>()?.TakeDamage(1);
+        }
+    }
+
 }

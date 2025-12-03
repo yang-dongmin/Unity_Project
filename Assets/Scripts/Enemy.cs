@@ -44,12 +44,4 @@ public class Enemy : MonoBehaviour
         pos.y = terrainY + heightOffset;
         transform.position = pos;
     }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            other.GetComponent<PlayerHealth>()?.TakeDamage(1);
-        }
-    }
 }
