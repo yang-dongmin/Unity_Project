@@ -179,9 +179,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bebb4bec160e49dca8bc05c68e5c79d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Projectile
-  speed: 50
+  speed: 100
   damage: 1
   lifeTime: 3
+  hitFlash: {fileID: 7157116184867527554, guid: 58930d8414077594db4be9db43b1331d, type: 3}
 --- !u!54 &-6607676613217021867
 Rigidbody:
   m_ObjectHideFlags: 0

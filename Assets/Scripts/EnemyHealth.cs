@@ -16,6 +16,7 @@ public class EnemyHealth : MonoBehaviour
 
         if (currentHealth <= 0)
         {
+            Object.FindFirstObjectByType<GameManager>().AddKill();
             Die();
         }
     }

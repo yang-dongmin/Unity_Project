@@ -6,6 +6,8 @@ public class Projectile : MonoBehaviour
     public int damage = 1;
     public float lifeTime = 3f;
 
+    public GameObject hitFlash;
+
     void Start()
     {
         Destroy(gameObject, lifeTime);
@@ -26,6 +28,13 @@ public class Projectile : MonoBehaviour
         {
             Debug.Log("Enemy Hit!");
             other.GetComponent<EnemyHealth>()?.TakeDamage(damage);
+            Destroy(gameObject);
+
+            if (hitFlash != null)
+            {
+                Instantiate(hitFlash, transform.position, Quaternion.identity);
+            }
+
             Destroy(gameObject);
         }
     }

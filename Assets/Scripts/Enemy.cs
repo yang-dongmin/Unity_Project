@@ -11,25 +11,25 @@ public class Enemy : MonoBehaviour
         GameObject playerObj = GameObject.FindWithTag("Player");
         if (playerObj != null)
             player = playerObj.transform;
-        else
-            Debug.LogError("Player not found! Tag the player as 'Player'");
     }
 
     void Update()
+{
+    if (player == null) return;
+
+    Vector3 direction = player.position - transform.position;
+
+    // 방향 벡터가 0인지 확인
+    if (direction.sqrMagnitude > 0.0001f)
     {
-        if (player == null) return;
-
-        // 1) 플레이어 쪽 방향 (XZ 평면에서만)
-        Vector3 toPlayer = player.position - transform.position;
-        toPlayer.y = 0f;
-        Vector3 dir = toPlayer.normalized;
-
-        // 2) XZ로만 따라가기
-        transform.position += dir * speed * Time.deltaTime;
-
-        // 3) 지형에 붙이기 (Terrain 기준)
-        StickToGround();
+        Quaternion lookRot = Quaternion.LookRotation(direction);
+        transform.rotation = lookRot;
     }
+
+    transform.position += transform.forward * speed * Time.deltaTime;
+}
+
+
 
     void StickToGround()
     {
@@ -44,4 +44,13 @@ public class Enemy : MonoBehaviour
         pos.y = terrainY + heightOffset;
         transform.position = pos;
     }
+    void KillPlayer()
+    {
+        Transform player = GetComponent<Collider>().transform;
+
+        Object.FindFirstObjectByType<GameManager>().GameOver(player);
+
+        Destroy(player.gameObject); // 또는 SetActive(false)
+    }
+
 }
