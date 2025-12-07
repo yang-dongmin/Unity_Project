@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 252ea7616f0baf54a86953682a72a14f, type: 3}
+  m_Name: RocketLauncherData
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponData
+  weaponModelPrefab: {fileID: 1411512464560164, guid: 9b7ad531e8aa52a4fbb7c69365bec666, type: 3}
+  pickupPrefab: {fileID: 1411512464560164, guid: 02baef62b1bfedf40bb369fb7542b9e7, type: 3}
+  projectilePrefab: {fileID: 5419049878964254956, guid: 714d86851accdfb4aa58d005a56e28e6, type: 3}
+  weaponName: Rocket Launcher
+  weaponType: 1
+  fireCooldown: 3
+  isAutoFire: 0
+  muzzleFlashPrefab: {fileID: 9221845196701723727, guid: 03802797c51f86a47bbab00d0713cad1, type: 3}
+  rocketSpeed: 100
+  explosionRadius: 5
+  explosionDamage: 3
+  explosionEffectPrefab: {fileID: 6171120887291150823, guid: 9940519a98895c449b300abbba799f14, type: 3}
+  modelRotationOffset: {x: 0, y: 180, z: 0}
+  tiltAmount: 10
+  tiltSpeed: 15
+  fireSound: {fileID: 0}
+  fireVolume: 1

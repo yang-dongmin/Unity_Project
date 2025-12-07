@@ -4,6 +4,8 @@ public class EnemyHealth : MonoBehaviour
 {
     public int maxHealth = 3;
     private int currentHealth;
+    public GameObject xpOrbPrefab;
+
 
     void Start()
     {
@@ -23,6 +25,7 @@ public class EnemyHealth : MonoBehaviour
 
     void Die()
     {
+        Instantiate(xpOrbPrefab, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }
 }
