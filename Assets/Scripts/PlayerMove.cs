@@ -55,26 +55,14 @@ public class PlayerMove : MonoBehaviour
 
     void Move()
     {
-        // 1) XZ 방향으로만 이동 벡터 계산
+        float speed = PlayerStats.instance.moveSpeed;   // 🔥 강화된 이동속도 적용
+
         Vector3 direction = transform.right * moveInput.x + transform.forward * moveInput.y;
-        Vector3 move = direction * moveSpeed * Time.deltaTime;
+        Vector3 move = direction * speed * Time.deltaTime;
 
-        // 2) 우선 평면 기준으로 이동
         controller.Move(move);
-
-        // 3) 현재 XZ 위치에서 Terrain 높이 샘플링해서 Y 맞추기
-        Terrain terrain = Terrain.activeTerrain;
-        if (terrain != null)
-        {
-            Vector3 pos = transform.position;
-
-            float terrainY = terrain.SampleHeight(pos) + terrain.GetPosition().y;
-
-            // 땅 바로 위로 스냅
-            pos.y = terrainY + heightOffset;
-            transform.position = pos;
-        }
     }
+
 
     void Look()
     {

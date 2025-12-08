@@ -387,10 +387,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.145118
-  m_Height: 0.73960495
+  m_Radius: 0.2
+  m_Height: 0.8
   m_Direction: 1
-  m_Center: {x: -0.0075883865, y: 0.33836842, z: 0.00768137}
+  m_Center: {x: 0, y: 0.4, z: 0}
 --- !u!114 &5202154239195411467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -417,7 +417,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd466eb6d35b84f9abb8cd49877e3a52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxHealth: 3
+  maxHealth: 5
   xpOrbPrefab: {fileID: 4603872237780838414, guid: f4821f1d4f072854ab36dca624a11247, type: 3}
 --- !u!1 &498253721421649741
 GameObject:

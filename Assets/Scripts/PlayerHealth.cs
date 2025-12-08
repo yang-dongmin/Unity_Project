@@ -2,13 +2,18 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
-    public int health = 1;
+    private PlayerStats stats;
+
+    private void Start()
+    {
+        stats = PlayerStats.instance;
+    }
 
     public void TakeDamage(int amount)
     {
-        health -= amount;
+        stats.currentHealth -= amount;
 
-        if (health <= 0)
+        if (stats.currentHealth <= 0)
         {
             Debug.Log("Player Dead");
             gameObject.SetActive(false);

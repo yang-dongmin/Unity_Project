@@ -48,6 +48,8 @@ public class PlayerXP : MonoBehaviour
         }
 
         Debug.Log("레벨업! 현재 레벨: " + level);
+        LevelUpManager.instance.OpenLevelUpUI();
+
     }
 
     void UpdateUI()
