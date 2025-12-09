@@ -23,7 +23,7 @@ MonoBehaviour:
   rocketSpeed: 100
   explosionRadius: 5
   explosionDamage: 3
-  explosionEffectPrefab: {fileID: 6171120887291150823, guid: 9940519a98895c449b300abbba799f14, type: 3}
+  explosionEffectPrefab: {fileID: 4809171458859421548, guid: 4e91ed1a8efe7044785b9bd97a47d87f, type: 3}
   modelRotationOffset: {x: 0, y: 180, z: 0}
   tiltAmount: 10
   tiltSpeed: 15

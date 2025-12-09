@@ -183,7 +183,7 @@ MonoBehaviour:
   speed: 100
   damage: 1
   lifeTime: 3
-  hitFlash: {fileID: 7157116184867527554, guid: 58930d8414077594db4be9db43b1331d, type: 3}
+  hitFlash: {fileID: 952961124639765284, guid: 1095a5c9f65bfbe4383f63d5d1886c65, type: 3}
 --- !u!54 &-6607676613217021867
 Rigidbody:
   m_ObjectHideFlags: 0
