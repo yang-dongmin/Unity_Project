@@ -5,6 +5,9 @@ public class BossEnemy : MonoBehaviour
     public float moveSpeed = 2f;
     public float stopDistance = 4f;
 
+    public bool introLock = true;   // 처음엔 공격 못함
+
+
     Transform player;
     BossAttack bossAttack;
 
@@ -16,6 +19,7 @@ public class BossEnemy : MonoBehaviour
 
     void Update()
     {
+        if (introLock) return;
         if (player == null) return;
 
         // 플레이어 방향 보기

@@ -60,7 +60,8 @@ public class LevelUpManager : MonoBehaviour
     {
         if (BossSpawner.instance.bossSpawned)
         {
-            BossIntroController.instance.PlayBossIntro();
+            GameObject boss = GameObject.FindGameObjectWithTag("Boss");
+            BossIntroController.instance.PlayIntro(boss);
             BossSpawner.instance.bossSpawned = false; // 중복 실행 방지
         }
     }

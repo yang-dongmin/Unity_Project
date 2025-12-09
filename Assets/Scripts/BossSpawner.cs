@@ -27,9 +27,6 @@ public class BossSpawner : MonoBehaviour
         // 🔥 EnemySpawner 멈추기
         EnemySpawner.instance?.StopSpawning();
 
-        // ❗ 인트로는 여기서 실행하지 않는다!
-        // BossIntroController.instance?.PlayBossIntro();  ← 삭제됨
-
         // 🔥 스폰 준비 체크
         if (bossPrefab == null || bossSpawnPoint == null)
         {
