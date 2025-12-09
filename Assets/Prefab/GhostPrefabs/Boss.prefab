@@ -390,8 +390,8 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.2
-  m_Height: 0.8
+  m_Radius: 0.4
+  m_Height: 1.5
   m_Direction: 1
   m_Center: {x: 0, y: 0.4, z: 0}
 --- !u!114 &-3949380137774764365
@@ -422,6 +422,9 @@ MonoBehaviour:
   attackCooldown: 3
   laserPrefab: {fileID: 2318556057457697847, guid: dd09c63aeea6f47b7ad8d5a1fb33ffe6, type: 3}
   firePoint: {fileID: 2833861681032047914}
+  aoePrefab: {fileID: 7478731271839673279, guid: 4d3c8045dd8857a4b8d34c2361c61045, type: 3}
+  aoeRadius: 3
+  aoeDamage: 30
   damage: 20
 --- !u!114 &9210595638287571577
 MonoBehaviour:
@@ -437,6 +440,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossEnemy
   moveSpeed: 5
   stopDistance: 7
+  introLock: 1
 --- !u!1 &498253721421649741
 GameObject:
   m_ObjectHideFlags: 0

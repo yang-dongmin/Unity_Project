@@ -7,19 +7,23 @@ public class BossSpawner : MonoBehaviour
     public GameObject bossPrefab;
     public Transform bossSpawnPoint;
 
-    // 🔥 카드 선택이 끝난 뒤 보스 인트로를 실행시키기 위한 플래그
-    public bool bossSpawned = false;
+    // ✅ 실제로 스폰된 보스를 저장하는 static 변수
+    public static GameObject spawnedBoss = null;
 
     private void Awake()
     {
         instance = this;
+        Debug.Log("BossSpawner Awake, spawnedBoss = " + spawnedBoss);
     }
 
     public void SpawnBoss()
     {
-        // 이미 보스가 존재하면 스폰 X
-        if (GameObject.FindGameObjectWithTag("Boss") != null)
+        // 이미 스폰된 보스가 있으면 그냥 그걸 사용
+        if (spawnedBoss != null)
+        {
+            Debug.Log("BossSpawner: 이미 보스가 존재함: " + spawnedBoss.name);
             return;
+        }
 
         // 🔥 적 제거
         KillAllEnemies();
@@ -34,16 +38,12 @@ public class BossSpawner : MonoBehaviour
             return;
         }
 
-        // 🔥 보스 생성
-        GameObject boss = Instantiate(bossPrefab, bossSpawnPoint.position, Quaternion.identity);
-        boss.tag = "Boss";
+        // 🔥 보스 생성 + static 변수에 저장
+        spawnedBoss = Instantiate(bossPrefab, bossSpawnPoint.position, Quaternion.identity);
+        spawnedBoss.tag = "Boss";
 
-        // 🔥 "인트로 예약" 플래그 켜기
-        bossSpawned = true;
-
-        Debug.Log("🔥 보스 등장! (카드 선택 후 인트로 재생 예정)");
+        Debug.Log("🔥 보스 스폰 완료! spawnedBoss = " + spawnedBoss.name);
     }
-
 
     void KillAllEnemies()
     {

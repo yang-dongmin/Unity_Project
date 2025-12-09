@@ -5,6 +5,8 @@ public class PlayerMove : MonoBehaviour
 {
     public float moveSpeed = 5f;
     public float mouseSensitivity = 100f;
+    public bool canControl = true;   // ← 인트로 중에는 false로 만들어서 조작 잠금
+
     public float heightOffset = 1.0f; // 땅에서 띄울 높이
 
     private CharacterController controller;
@@ -52,6 +54,8 @@ public class PlayerMove : MonoBehaviour
 
     void Update()
     {
+        if (!canControl) return;
+
         Move();
         Look();
     }

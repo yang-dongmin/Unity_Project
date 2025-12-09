@@ -8,7 +8,10 @@ public class LevelUpManager : MonoBehaviour
     public Transform cardContainer;
     public GameObject cardPrefab;
 
-    public UpgradeData[] allUpgrades;  // SO로 만든 업그레이드들
+    public UpgradeData[] allUpgrades;
+
+    // 🔥 추가: 경고 패널
+    public GameObject warningPanel;
 
     private void Awake()
     {
@@ -17,7 +20,7 @@ public class LevelUpManager : MonoBehaviour
 
     public void OpenLevelUpUI()
     {
-        Time.timeScale = 0f; // 게임 일시정지
+        Time.timeScale = 0f;
         levelUpPanel.SetActive(true);
 
         Cursor.lockState = CursorLockMode.None;
@@ -28,11 +31,9 @@ public class LevelUpManager : MonoBehaviour
 
     void ShowRandomCards()
     {
-        // 기존 카드 제거
         foreach (Transform child in cardContainer)
             Destroy(child.gameObject);
 
-        // 랜덤 3개 선택
         for (int i = 0; i < 3; i++)
         {
             var upgrade = allUpgrades[Random.Range(0, allUpgrades.Length)];
@@ -47,23 +48,41 @@ public class LevelUpManager : MonoBehaviour
     void ApplyUpgrade(UpgradeData upgrade)
     {
         PlayerStats.instance.ApplyUpgrade(upgrade);
+        Debug.Log("업그레이드 적용됨 : " + upgrade.upgradeName);
 
         levelUpPanel.SetActive(false);
-        Time.timeScale = 1f; // 게임 재개
+        Time.timeScale = 1f;
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
         CheckBossIntro();
     }
+
     void CheckBossIntro()
     {
-        if (BossSpawner.instance.bossSpawned)
+        Debug.Log("CheckBossIntro 호출됨. BossSpawner.spawnedBoss = " + BossSpawner.spawnedBoss);
+
+        if (BossSpawner.spawnedBoss == null)
         {
-            GameObject boss = GameObject.FindGameObjectWithTag("Boss");
-            BossIntroController.instance.PlayIntro(boss);
-            BossSpawner.instance.bossSpawned = false; // 중복 실행 방지
+            Debug.Log("CheckBossIntro: 아직 스폰된 보스가 없음.");
+            return;
         }
+
+        // 🔥 1) 카드 선택이 끝났으니까 WarningPanel 켜기 (반짝반짝 시작)
+        if (warningPanel != null)
+            warningPanel.SetActive(true);
+
+        // 🔥 2) 인트로는 조금 딜레이 후 실행하는게 자연스러움
+        StartCoroutine(StartIntroAfterDelay(BossSpawner.spawnedBoss));
     }
 
+    System.Collections.IEnumerator StartIntroAfterDelay(GameObject boss)
+    {
+        // 🔥 경고 잠깐 보여줄 시간 (1초)
+        yield return new WaitForSecondsRealtime(3f);
+
+        // 🔥 인트로 실제 시작 → BossIntroController 안에서 WarningPanel 자동 OFF 예정
+        BossIntroController.instance.PlayIntro(boss);
+    }
 }

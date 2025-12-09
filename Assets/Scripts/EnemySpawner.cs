@@ -27,24 +27,20 @@ public class EnemySpawner : MonoBehaviour
     void SpawnEnemy()
     {
         if (playerXP == null)
-        {
-            Debug.LogWarning("PlayerXP를 찾을 수 없음!");
             return;
-        }
 
-        int level = playerXP.level;  // 🔥 PlayerXP에서 레벨 직접 가져오기
-
+        int level = playerXP.level;
         GameObject enemyToSpawn = GetEnemyForLevel(level);
 
         if (enemyToSpawn == null)
-        {
-            Debug.LogWarning("스폰 가능한 몬스터가 없음!");
             return;
-        }
 
-        Vector3 pos = Random.onUnitSphere;
-        pos.y = 0;
-        pos = pos.normalized * spawnDistance;
+        // 🔥 플레이어 주변 spawnDistance 반경에서 스폰
+        Vector3 dir = Random.onUnitSphere;
+        dir.y = 0;
+        dir.Normalize();
+
+        Vector3 pos = playerXP.transform.position + dir * spawnDistance;
 
         Instantiate(enemyToSpawn, pos, Quaternion.identity);
     }

@@ -40,6 +40,7 @@ public class BossEnemy : MonoBehaviour
 
     void LateUpdate()
     {
+        if (introLock) return;
         StickToGround();
     }
 
