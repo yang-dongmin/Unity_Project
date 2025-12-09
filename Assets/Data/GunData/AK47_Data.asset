@@ -17,7 +17,7 @@ MonoBehaviour:
   projectilePrefab: {fileID: 7681256480116315996, guid: 96be3e6757b534dfda459168ac7e17f5, type: 3}
   weaponName: AK47
   weaponType: 0
-  fireCooldown: 0.15
+  fireCooldown: 0.5
   isAutoFire: 1
   muzzleFlashPrefab: {fileID: 9221845196701723727, guid: 03802797c51f86a47bbab00d0713cad1, type: 3}
   rocketSpeed: 10
@@ -31,3 +31,5 @@ MonoBehaviour:
   fireVolume: 0.3
   autoLoopSound: {fileID: 8300000, guid: 88af688bb27563645abceb903a5e0958, type: 3}
   loopVolume: 0.3
+  autoShotSound: {fileID: 0}
+  shotVolume: 1

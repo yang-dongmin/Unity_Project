@@ -18,10 +18,15 @@ public class PlayerWeapon : MonoBehaviour
     private Quaternion tiltedRot;
     private bool isTilting = false;
 
-    private AudioSource audioSource;
+    bool isFiring = false;
 
-    private AudioSource[] gunAudioPool;
-    private int audioIndex = 0;
+    // =======================
+    // 🔊 오디오
+    // =======================
+    private AudioSource singleShotSource;
+    private AudioSource loopSource;
+    private AudioSource[] shotPool;
+    private int shotIndex = 0;
 
 
     void Awake()
@@ -34,24 +39,18 @@ public class PlayerWeapon : MonoBehaviour
         ApplyWeaponData(currentWeapon);
         originalRot = weaponHolder.localRotation;
 
-        audioSource = gameObject.AddComponent<AudioSource>();
-        audioSource.spatialBlend = 1f;
-        audioSource.playOnAwake = false;
+        singleShotSource = gameObject.AddComponent<AudioSource>();
+        singleShotSource.spatialBlend = 0f;
 
-        gunAudioPool = new AudioSource[10];
-        for (int i = 0; i < gunAudioPool.Length; i++)
-        {
-            gunAudioPool[i] = gameObject.AddComponent<AudioSource>();
-            gunAudioPool[i].spatialBlend = 1f;
-            gunAudioPool[i].playOnAwake = false;
-        }
-    }
+        loopSource = gameObject.AddComponent<AudioSource>();
+        loopSource.loop = true;
+        loopSource.spatialBlend = 0f;
 
-    void Update()
-    {
-        if (isFiring && currentWeapon != null && currentWeapon.isAutoFire)
+        shotPool = new AudioSource[10];
+        for (int i = 0; i < 10; i++)
         {
-            TryShoot();
+            shotPool[i] = gameObject.AddComponent<AudioSource>();
+            shotPool[i].spatialBlend = 0f;
         }
     }
 
@@ -69,22 +68,39 @@ public class PlayerWeapon : MonoBehaviour
         input.Disable();
     }
 
-    bool isFiring = false;
 
+    // ----------------------------------------------------
+    // 🔥 핵심: 모든 발사는 Update()에서 쿨다운 검사 후 실행
+    // ----------------------------------------------------
+    void Update()
+    {
+        if (!isFiring) return;
+        if (currentWeapon == null) return;
+
+        TryShoot();
+    }
+
+
+    // ----------------------------------------------------
+    // 🔥 입력 처리
+    // ----------------------------------------------------
     void OnAttackStart(InputAction.CallbackContext ctx)
     {
+
+        if (!currentWeapon.isAutoFire)
+        {
+            // 단발은 누르고 있는 동안 자동반복 안 되게 isFiring = false 유지
+            TryShoot();
+            return; // ← 중요: 자동 발사 루틴으로 넘어가지 않음
+        }
         isFiring = true;
 
-        if (currentWeapon.isAutoFire)
+        // 자동 사격 루프 시작
+        if (currentWeapon.isAutoFire && currentWeapon.autoLoopSound != null)
         {
-            audioSource.loop = true;
-            audioSource.clip = currentWeapon.fireSound;
-            audioSource.time = 0f;
-            audioSource.Play();
-        }
-        else
-        {
-            TryShoot();
+            loopSource.clip = currentWeapon.autoLoopSound;
+            loopSource.volume = currentWeapon.loopVolume;
+            loopSource.Play();
         }
     }
 
@@ -94,29 +110,27 @@ public class PlayerWeapon : MonoBehaviour
 
         if (currentWeapon.isAutoFire)
         {
-            audioSource.Stop();
+            loopSource.Stop();
         }
     }
 
 
+    // ----------------------------------------------------
+    // 🔥 쿨다운 체크 + 발사
+    // ----------------------------------------------------
     void TryShoot()
     {
-        if (currentWeapon == null) return;
-
         float baseCooldown = currentWeapon.fireCooldown;
+        float bonus = PlayerStats.instance != null ? PlayerStats.instance.attackSpeed : 0f;
 
-        // 🔥 PlayerStats가 없으면 공격속도 보정 0으로 처리
-        float attackSpeedBonus = 0f;
-        if (PlayerStats.instance != null)
-        {
-            attackSpeedBonus = PlayerStats.instance.attackSpeed;   // ex) 4
-        }
+        float rpgScale = 0.15f;
+        float effectiveBonus = (currentWeapon.weaponType == WeaponType.RocketLauncher)
+                               ? bonus * rpgScale
+                               : bonus;
 
-        // 🔥 공격속도 = 쿨다운 감소 개념으로 사용
-        float cooldown = baseCooldown - attackSpeedBonus;
-        cooldown = Mathf.Max(0.05f, cooldown);    // 최소 0.05초
+        float cooldown = baseCooldown / (1f + effectiveBonus);
 
-        // 🔥 여기서는 반드시 cooldown을 써야 강화가 적용됨
+
         if (Time.time < lastFireTime + cooldown)
             return;
 
@@ -125,40 +139,46 @@ public class PlayerWeapon : MonoBehaviour
     }
 
 
-
-
+    // ----------------------------------------------------
+    // 🔥 총알 생성
+    // ----------------------------------------------------
     void Shoot()
     {
-        // ----------------------
-        //  🔥 Normal Weapon
-        // ----------------------
+        if (firePoint == null)
+        {
+            Debug.LogError("firePoint 없음!");
+            return;
+        }
+
         if (currentWeapon.weaponType == WeaponType.Normal)
         {
             GameObject proj = Instantiate(currentWeapon.projectilePrefab, firePoint.position, firePoint.rotation);
 
-            // 🔥 Projectile damage 강화 적용
+            // 플레이어와 충돌 무시
+            Collider projCol = proj.GetComponent<Collider>();
+            Collider playerCol = GetComponentInParent<Collider>();
+            if (projCol && playerCol)
+                Physics.IgnoreCollision(projCol, playerCol);
+
             Projectile p = proj.GetComponent<Projectile>();
             if (p != null)
-            {
                 p.damage += Mathf.RoundToInt(PlayerStats.instance.attackDamage);
-            }
 
             if (!currentWeapon.isAutoFire)
-            {
-                PlayFireSound();
-            }
+                PlaySingleShot();
         }
-        // ----------------------
-        //  🔥 Rocket Launcher
-        // ----------------------
         else if (currentWeapon.weaponType == WeaponType.RocketLauncher)
         {
             GameObject obj = Instantiate(currentWeapon.projectilePrefab, firePoint.position, firePoint.rotation);
 
+            Collider projCol = obj.GetComponent<Collider>();
+            Collider playerCol = GetComponentInParent<Collider>();
+            if (projCol && playerCol)
+                Physics.IgnoreCollision(projCol, playerCol);
+
             RocketProjectile rp = obj.GetComponent<RocketProjectile>();
             if (rp != null)
             {
-                // 🔥 로켓 강화 적용 (더 명확하게 통일됨)
                 rp.damage = currentWeapon.explosionDamage + Mathf.RoundToInt(PlayerStats.instance.explosionDamage);
                 rp.explosionRadius = currentWeapon.explosionRadius + PlayerStats.instance.explosionRadius;
                 rp.speed = currentWeapon.rocketSpeed;
@@ -166,18 +186,72 @@ public class PlayerWeapon : MonoBehaviour
             }
 
             if (!currentWeapon.isAutoFire)
-            {
-                PlayFireSound();
-            }
+                PlaySingleShot();
         }
 
-        if (muzzleFlashInstance != null)
-            muzzleFlashInstance.Play();
+        if (currentWeapon.isAutoFire)
+            PlayAutoShot();
 
+        muzzleFlashInstance?.Play();
         StartCoroutine(WeaponTilt());
     }
 
 
+    // 🔊 단발 사운드
+    void PlaySingleShot()
+    {
+        if (currentWeapon.fireSound == null) return;
+        singleShotSource.volume = currentWeapon.fireVolume;
+        singleShotSource.PlayOneShot(currentWeapon.fireSound);
+    }
+
+    // 🔊 자동사격 매발 사운드
+    void PlayAutoShot()
+    {
+        if (currentWeapon.autoShotSound == null) return;
+        var src = shotPool[shotIndex];
+        src.volume = currentWeapon.shotVolume;
+        src.PlayOneShot(currentWeapon.autoShotSound);
+        shotIndex = (shotIndex + 1) % shotPool.Length;
+    }
+
+
+    // ----------------------------------------------------
+    // 🔧 무기 교체
+    // ----------------------------------------------------
+    public void ApplyWeaponData(WeaponData newWeapon)
+    {
+        currentWeapon = newWeapon;
+
+        if (currentWeaponModel != null)
+            Destroy(currentWeaponModel);
+
+        if (newWeapon.weaponModelPrefab != null)
+        {
+            currentWeaponModel = Instantiate(newWeapon.weaponModelPrefab, weaponHolder);
+            currentWeaponModel.transform.localPosition = Vector3.zero;
+            currentWeaponModel.transform.localRotation =
+                Quaternion.Euler(newWeapon.modelRotationOffset);
+
+            Transform fp = currentWeaponModel.transform.Find("firepoint");
+            if (fp != null)
+                firePoint = fp;
+        }
+
+        if (muzzleFlashInstance != null)
+            Destroy(muzzleFlashInstance.gameObject);
+
+        if (newWeapon.muzzleFlashPrefab != null)
+        {
+            muzzleFlashInstance = Instantiate(newWeapon.muzzleFlashPrefab, firePoint);
+            muzzleFlashInstance.Stop();
+        }
+    }
+
+
+    // ----------------------------------------------------
+    // 🔥 반동
+    // ----------------------------------------------------
     IEnumerator WeaponTilt()
     {
         if (isTilting) yield break;
@@ -202,57 +276,5 @@ public class PlayerWeapon : MonoBehaviour
         }
 
         isTilting = false;
-    }
-
-
-    public void ApplyWeaponData(WeaponData newWeapon)
-    {
-        currentWeapon = newWeapon;
-
-        if (muzzleFlashInstance != null)
-            Destroy(muzzleFlashInstance.gameObject);
-
-        if (currentWeaponModel != null)
-            Destroy(currentWeaponModel);
-
-        if (currentWeapon.weaponModelPrefab != null)
-        {
-            currentWeaponModel = Instantiate(currentWeapon.weaponModelPrefab, weaponHolder);
-            currentWeaponModel.transform.localPosition = Vector3.zero;
-            currentWeaponModel.transform.localRotation = Quaternion.identity;
-            currentWeaponModel.transform.localRotation =
-                Quaternion.Euler(currentWeapon.modelRotationOffset);
-
-            Transform fp = currentWeaponModel.transform.Find("firepoint");
-            if (fp != null)
-                firePoint = fp;
-        }
-
-        if (currentWeapon.muzzleFlashPrefab != null)
-        {
-            muzzleFlashInstance = Instantiate(currentWeapon.muzzleFlashPrefab, firePoint);
-            muzzleFlashInstance.Stop();
-        }
-
-        if (muzzleFlashInstance != null)
-        {
-            muzzleFlashInstance.transform.SetParent(firePoint);
-            muzzleFlashInstance.transform.localPosition = Vector3.zero;
-            muzzleFlashInstance.transform.localRotation = Quaternion.identity;
-        }
-        
-    }
-
-
-    void PlayFireSound()
-    {
-        if (currentWeapon.fireSound == null)
-            return;
-
-        AudioSource src = gunAudioPool[audioIndex];
-        src.volume = currentWeapon.fireVolume;
-        src.PlayOneShot(currentWeapon.fireSound, currentWeapon.fireVolume * 0.6f);
-
-        audioIndex = (audioIndex + 1) % gunAudioPool.Length;
     }
 }

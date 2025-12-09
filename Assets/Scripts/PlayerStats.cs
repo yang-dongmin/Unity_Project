@@ -49,8 +49,20 @@ public class PlayerStats : MonoBehaviour
                 break;
 
             case UpgradeData.UpgradeType.MaxHealthIncrease:
-                maxHealth += Mathf.RoundToInt(up.value);
+                {
+                    int increase = Mathf.RoundToInt(up.value);
+
+                    // 🔥 최대 체력 증가
+                    maxHealth += increase;
+
+                    // 🔥 현재 체력도 증가량만큼 회복
+                    currentHealth += increase;
+
+                    // 🔥 현재 체력이 최대를 넘지 않도록 제한
+                    currentHealth = Mathf.Min(currentHealth, maxHealth);
+                }
                 break;
+
 
             case UpgradeData.UpgradeType.Heal:
                 currentHealth = Mathf.Min(maxHealth, currentHealth + Mathf.RoundToInt(up.value));

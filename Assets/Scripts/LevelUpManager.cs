@@ -53,5 +53,16 @@ public class LevelUpManager : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        CheckBossIntro();
     }
+    void CheckBossIntro()
+    {
+        if (BossSpawner.instance.bossSpawned)
+        {
+            BossIntroController.instance.PlayBossIntro();
+            BossSpawner.instance.bossSpawned = false; // 중복 실행 방지
+        }
+    }
+
 }

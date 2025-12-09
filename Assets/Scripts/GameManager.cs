@@ -37,6 +37,18 @@ public class GameManager : MonoBehaviour
 
     private int killCount = 0;
 
+    public GameObject clearPanel;
+
+    public void GameClear()
+    {
+        Time.timeScale = 0f;
+        clearPanel.SetActive(true);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+
 
     void Awake()
     {

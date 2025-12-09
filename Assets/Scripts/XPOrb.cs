@@ -11,8 +11,6 @@ public class XPOrb : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("Player 찾음? → " + player);
-
         player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 

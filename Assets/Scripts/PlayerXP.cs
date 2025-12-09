@@ -32,10 +32,19 @@ public class PlayerXP : MonoBehaviour
         {
             currentXP -= xpToNextLevel;
             LevelUp();
+
+            // 🔥 여기에서 즉시 보스 스폰 체크
+            if (level == 15)
+            {
+                BossSpawner.instance?.SpawnBoss();
+            }
+
+            LevelUpManager.instance.OpenLevelUpUI();
         }
 
         UpdateUI();
     }
+
 
     void LevelUp()
     {
@@ -48,7 +57,6 @@ public class PlayerXP : MonoBehaviour
         }
 
         Debug.Log("레벨업! 현재 레벨: " + level);
-        LevelUpManager.instance.OpenLevelUpUI();
 
     }
 
@@ -68,5 +76,6 @@ public class PlayerXP : MonoBehaviour
         {
             xpText.text = currentXP + " / " + xpToNextLevel;
         }
+
     }
 }

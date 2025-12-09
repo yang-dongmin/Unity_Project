@@ -17,7 +17,7 @@ MonoBehaviour:
   projectilePrefab: {fileID: 7681256480116315996, guid: 96be3e6757b534dfda459168ac7e17f5, type: 3}
   weaponName: Pistol
   weaponType: 0
-  fireCooldown: 0.5
+  fireCooldown: 1
   isAutoFire: 0
   muzzleFlashPrefab: {fileID: 9221845196701723727, guid: 03802797c51f86a47bbab00d0713cad1, type: 3}
   rocketSpeed: 10
@@ -29,3 +29,7 @@ MonoBehaviour:
   tiltSpeed: 15
   fireSound: {fileID: 8300000, guid: 38d10ded22ea9f14fadddeba90dc9d17, type: 3}
   fireVolume: 1
+  autoLoopSound: {fileID: 0}
+  loopVolume: 1
+  autoShotSound: {fileID: 0}
+  shotVolume: 1

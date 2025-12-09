@@ -17,9 +17,8 @@ public class WeaponData : ScriptableObject
     [Header("공통 정보")]
     public string weaponName;
     public WeaponType weaponType = WeaponType.Normal;
-    public float fireCooldown = 0.2f;
+    public float fireCooldown;
     public bool isAutoFire = false;
-
 
     [Header("머즐 플래시")]
     public ParticleSystem muzzleFlashPrefab;
@@ -37,11 +36,19 @@ public class WeaponData : ScriptableObject
     public float tiltAmount = 10f;
     public float tiltSpeed = 15f;
 
-    [Header("사운드")]
+    // ================================
+    // 🔥 사운드 시스템
+    // ================================
+
+    [Header("단발 사운드 (Single Shot)")]
     public AudioClip fireSound;
     public float fireVolume = 1f;
-    public AudioClip autoLoopSound;  // 자동사격용 루프 사운드
+
+    [Header("자동사격 루프 사운드 (Auto Loop)")]
+    public AudioClip autoLoopSound;  
     public float loopVolume = 1f;
 
-
+    [Header("자동사격 매발 사운드 (Auto Shot)")]
+    public AudioClip autoShotSound;   // 매 발 PlayOneShot
+    public float shotVolume = 1f;     // 매 발 음량
 }

@@ -15,7 +15,11 @@ public class PlayerMove : MonoBehaviour
 
     private float xRotation = 0f;
 
-    private InputSystem_Actions input;   // ★ 추가
+    private InputSystem_Actions input;
+
+    private float verticalVelocity = 0f;
+    private float gravity = -9.81f;
+
 
     void Awake()
     {
@@ -55,13 +59,38 @@ public class PlayerMove : MonoBehaviour
 
     void Move()
     {
-        float speed = PlayerStats.instance.moveSpeed;   // 🔥 강화된 이동속도 적용
+        float speed = PlayerStats.instance.moveSpeed;
 
         Vector3 direction = transform.right * moveInput.x + transform.forward * moveInput.y;
-        Vector3 move = direction * speed * Time.deltaTime;
+        Vector3 move = direction * speed;
 
-        controller.Move(move);
+        // 🔥 중력 적용
+        if (controller.isGrounded)
+            verticalVelocity = -1f;     // 땅에 붙여두기
+        else
+            verticalVelocity += gravity * Time.deltaTime;
+
+        move.y = verticalVelocity;
+
+        controller.Move(move * Time.deltaTime);
+
+        // 🔥 Terrain 지면 높이에 붙이기
+        Terrain terrain = Terrain.activeTerrain;
+        if (terrain != null)
+        {
+            Vector3 pos = transform.position;
+            float terrainY = terrain.SampleHeight(pos) + terrain.GetPosition().y;
+
+            if (pos.y < terrainY + heightOffset)
+            {
+                pos.y = terrainY + heightOffset;
+                transform.position = pos;
+                verticalVelocity = 0f; // 지면에 닿으면 중력 초기화
+            }
+        }
+
     }
+
 
 
     void Look()

@@ -26,14 +26,23 @@ public class RocketProjectile : MonoBehaviour
         transform.position += transform.forward * speed * Time.deltaTime;
     }
 
-    private void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
-        // 디버그용 로그
-        Debug.Log($"Rocket hit: {other.name}");
+        Debug.Log("Rocket hit: " + other.name);
 
-        // 플레이어 총구나 자기 자신 같은 건 무시하고 싶으면 여기에 조건 추가 가능
+        // 일반 적 데미지
+        EnemyHealth enemy = other.GetComponent<EnemyHealth>();
+        if (enemy != null)
+            enemy.TakeDamage(damage);
+
+        // 🔥 보스 데미지 추가
+        BossHealth boss = other.GetComponent<BossHealth>();
+        if (boss != null)
+            boss.TakeDamage(damage);
+
         Explode();
     }
+
 
     void Explode()
     {
