@@ -102,7 +102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64107eb097e8cfc44950caf55aa1e3be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::XPOrb
-  xpAmount: 10
+  xpAmount: 20
   pickupDistance: 1.2
   attractDistance: 4
   attractSpeed: 6

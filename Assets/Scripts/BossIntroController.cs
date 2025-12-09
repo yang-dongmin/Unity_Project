@@ -4,6 +4,8 @@ using System.Collections;
 public class BossIntroController : MonoBehaviour
 {
     public static BossIntroController instance;
+    public bool introPlayed = false;
+
 
     [Header("카메라")]
     public Transform introCamPoint;    
@@ -28,6 +30,11 @@ public class BossIntroController : MonoBehaviour
 
     public void PlayIntro(GameObject boss)
     {
+        if (introPlayed)  
+            return;
+
+        introPlayed = true;
+
         LevelUpManager.instance.warningPanel.SetActive(false);
 
         StartCoroutine(IntroRoutine(boss));

@@ -7,6 +7,9 @@ public class LevelUpManager : MonoBehaviour
     public GameObject levelUpPanel;
     public Transform cardContainer;
     public GameObject cardPrefab;
+    
+    public bool introPlayed = false;
+
 
     public UpgradeData[] allUpgrades;
 
@@ -68,11 +71,13 @@ public class LevelUpManager : MonoBehaviour
             Debug.Log("CheckBossIntro: 아직 스폰된 보스가 없음.");
             return;
         }
-
+        if (!introPlayed)
+        {
         // 🔥 1) 카드 선택이 끝났으니까 WarningPanel 켜기 (반짝반짝 시작)
-        if (warningPanel != null)
+        if (warningPanel != null){
+            introPlayed = true;
             warningPanel.SetActive(true);
-
+}
         // 🔥 2) 인트로는 조금 딜레이 후 실행하는게 자연스러움
         StartCoroutine(StartIntroAfterDelay(BossSpawner.spawnedBoss));
     }
@@ -84,5 +89,6 @@ public class LevelUpManager : MonoBehaviour
 
         // 🔥 인트로 실제 시작 → BossIntroController 안에서 WarningPanel 자동 OFF 예정
         BossIntroController.instance.PlayIntro(boss);
+        }
     }
 }
