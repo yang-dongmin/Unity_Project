@@ -18,7 +18,7 @@ MonoBehaviour:
   weaponName: Rocket Launcher
   weaponType: 1
   fireCooldown: 3
-  isAutoFire: 0
+  isAutoFire: 1
   muzzleFlashPrefab: {fileID: 9221845196701723727, guid: 03802797c51f86a47bbab00d0713cad1, type: 3}
   rocketSpeed: 100
   explosionRadius: 5
@@ -31,5 +31,5 @@ MonoBehaviour:
   fireVolume: 1
   autoLoopSound: {fileID: 0}
   loopVolume: 1
-  autoShotSound: {fileID: 0}
+  autoShotSound: {fileID: 8300000, guid: 01e6b12444e3841e8919729e0299b93e, type: 3}
   shotVolume: 1
