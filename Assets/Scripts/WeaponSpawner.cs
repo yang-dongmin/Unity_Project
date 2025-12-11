@@ -49,10 +49,12 @@ public class WeaponSpawner : MonoBehaviour
 
     Vector3 GetRandomPosition()
     {
-        return new Vector3(
-            Random.Range(-spawnAreaSize.x, spawnAreaSize.x),
-            1f,
-            Random.Range(-spawnAreaSize.z, spawnAreaSize.z)
-        );
+        float x = Random.Range(-spawnAreaSize.x, spawnAreaSize.x);
+        float z = Random.Range(-spawnAreaSize.z, spawnAreaSize.z);
+
+        float y = Terrain.activeTerrain.SampleHeight(new Vector3(x, 0, z));
+
+        return new Vector3(x, y + 0.5f, z);
     }
+
 }
