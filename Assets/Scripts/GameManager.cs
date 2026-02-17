@@ -30,7 +30,9 @@ public class GameManager : MonoBehaviour
 
     [Header("Audio")]
     public Slider bgmSlider;
+    public Slider sfxSlider;
     public AudioSource bgmSource;
+    public AudioSource sfxSource;
 
     private bool isGameOver = false;
     public bool isOptionOpen = false;
@@ -69,6 +71,13 @@ public class GameManager : MonoBehaviour
         {
             bgmSlider.value = bgmSource.volume;
             bgmSlider.onValueChanged.AddListener(SetBGMVolume);
+        }
+        
+        // sfx 슬라이더 설정
+        if (sfxSource != null && sfxSlider != null)
+        {
+            sfxSlider.value = sfxSource.volume;
+            sfxSlider.onValueChanged.AddListener(SetSFXVolume);
         }
 
         // 버튼 등록
@@ -213,6 +222,12 @@ public class GameManager : MonoBehaviour
     {
         if (bgmSource != null)
             bgmSource.volume = value;
+    }
+
+    public void SetSFXVolume(float value)
+    {
+        if (sfxSource != null)
+            sfxSource.volume = value;
     }
 
     public void AddKill()

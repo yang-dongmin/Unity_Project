@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
+using UnityEngine.Audio;
 
 public class PlayerWeapon : MonoBehaviour
 {
     public WeaponData currentWeapon;
 
+    public AudioMixerGroup sfxMixerGroup;
     public Transform firePoint;
     public Transform weaponHolder;
     private GameObject currentWeaponModel;
@@ -51,6 +53,7 @@ public class PlayerWeapon : MonoBehaviour
         {
             shotPool[i] = gameObject.AddComponent<AudioSource>();
             shotPool[i].spatialBlend = 0f;
+            shotPool[i].outputAudioMixerGroup = sfxMixerGroup;
         }
     }
 
@@ -164,8 +167,7 @@ public class PlayerWeapon : MonoBehaviour
             if (p != null)
                 p.damage += Mathf.RoundToInt(PlayerStats.instance.attackDamage);
 
-            if (!currentWeapon.isAutoFire)
-                PlaySingleShot();
+            
         }
         else if (currentWeapon.weaponType == WeaponType.RocketLauncher)
         {
@@ -185,8 +187,7 @@ public class PlayerWeapon : MonoBehaviour
                 rp.explosionEffect = currentWeapon.explosionEffectPrefab;
             }
 
-            if (!currentWeapon.isAutoFire)
-                PlaySingleShot();
+            
         }
 
         if (currentWeapon.isAutoFire)
@@ -197,13 +198,7 @@ public class PlayerWeapon : MonoBehaviour
     }
 
 
-    // 🔊 단발 사운드
-    void PlaySingleShot()
-    {
-        if (currentWeapon.fireSound == null) return;
-        singleShotSource.volume = currentWeapon.fireVolume;
-        singleShotSource.PlayOneShot(currentWeapon.fireSound);
-    }
+    
 
     // 🔊 자동사격 매발 사운드
     void PlayAutoShot()

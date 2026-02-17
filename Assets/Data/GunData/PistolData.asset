@@ -27,8 +27,6 @@ MonoBehaviour:
   modelRotationOffset: {x: 0, y: 0, z: 0}
   tiltAmount: 5
   tiltSpeed: 15
-  fireSound: {fileID: 8300000, guid: 38d10ded22ea9f14fadddeba90dc9d17, type: 3}
-  fireVolume: 1
   autoLoopSound: {fileID: 0}
   loopVolume: 1
   autoShotSound: {fileID: 8300000, guid: 38d10ded22ea9f14fadddeba90dc9d17, type: 3}
